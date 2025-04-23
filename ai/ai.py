@@ -12,11 +12,8 @@ class ImageInfo(BaseModel):
     object_condition: str
 
 
-# Set your API key
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
 def get_client() -> genai.Client:
-    client : genai.Client = genai.Client()
+    client : genai.Client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
     return client
 
 def get_response(image,client: genai.Client) -> Dict[str,str]:
