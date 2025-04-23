@@ -18,8 +18,8 @@ export default function SignUp() {
             password: password
         })
         
-        clearEmail();
-        clearPassword();
+        dispatch(clearEmail());
+        dispatch(clearPassword());
     }
 
     return(

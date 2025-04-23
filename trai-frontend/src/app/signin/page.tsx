@@ -17,8 +17,8 @@ export default function SignIn() {
             email: email,
             password: password
         })
-        clearEmail();
-        clearPassword();
+        dispatch(clearEmail());
+        dispatch(clearPassword());
     }
 
     return(
