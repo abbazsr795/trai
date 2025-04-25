@@ -35,11 +35,11 @@ export default function NewItem() {
     return(
         <div>
             <h1>label</h1>
-            <input onChange={(e) => dispatch(setLabel(e.target.value))} type="text" placeholder="Label" />
+            <input value={label} onChange={(e) => dispatch(setLabel(e.target.value))} type="text" placeholder="Label" />
             <h1>location</h1>
-            <input onChange={(e) => dispatch(setLocation(e.target.value))} type="text" placeholder="Location" />
+            <input value={location} onChange={(e) => dispatch(setLocation(e.target.value))} type="text" placeholder="Location" />
             <h1>description</h1>
-            <input onChange={(e) => dispatch(setDescription(e.target.value))} type="text" placeholder="Description" />
+            <input value={description} onChange={(e) => dispatch(setDescription(e.target.value))} type="text" placeholder="Description" />
             <button onClick={(e) => handleNewItem()}>Submit</button>
         </div>
     ) 
