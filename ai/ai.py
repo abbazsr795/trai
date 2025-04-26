@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from typing import Dict
 import os
+import uvicorn
 import json
 import google.genai as genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
@@ -59,3 +60,11 @@ async def classify_image(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Error from Gemini API: {str(e)}")
 
     return response
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",  # "main" is your filename (without .py), "app" is your FastAPI instance
+        host="0.0.0.0",
+        port=8000,
+        reload=True  # optional, for development (auto-reload on code change)
+    )
