@@ -33,7 +33,7 @@ def get_response(image_data: bytes, client: genai.Client) -> Dict[str, str]:
     response: GenerateContentResponse = client.models.generate_content(
         model='gemini-1.5-flash',
         contents=[
-            {"mime_type": "image/png", "data": uploaded_image},
+            uploaded_image,
             "Classify the object. Classify the object in this image into one of the following categories: " +
             "'perfectly reusable', 'reusable with some level of tinkering', or 'can't be used anymore'." +
             " Only give the name of the class and not any text."
