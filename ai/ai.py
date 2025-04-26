@@ -62,14 +62,6 @@ async def classify_image(file: UploadFile = File(...)):
 
     return response
 
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",  # "main" is your filename (without .py), "app" is your FastAPI instance
-        host="0.0.0.0",
-        port=8000,
-        reload=True  # optional, for development (auto-reload on code change)
-    )
-    
 @app.post("/classify-image/")
 async def classify_image(file: UploadFile = File(...)):
     image_bytes = await file.read()
@@ -79,3 +71,12 @@ async def classify_image(file: UploadFile = File(...)):
         return JSONResponse(content=result)
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",  # "main" is your filename (without .py), "app" is your FastAPI instance
+        host="0.0.0.0",
+        port=8000,
+        reload=True  # optional, for development (auto-reload on code change)
+    )
+    
