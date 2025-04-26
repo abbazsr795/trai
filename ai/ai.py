@@ -86,7 +86,7 @@ async def classify_image(file: UploadFile = File(...)):
     
 if __name__ == "__main__":
     uvicorn.run(
-        "ai:app",  # "main" is your filename (without .py), "app" is your FastAPI instance
+        "ai:app",  
         host="0.0.0.0",
         port=8000,
         reload=True  # optional, for development (auto-reload on code change)
