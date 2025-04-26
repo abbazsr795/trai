@@ -62,15 +62,15 @@ async def classify_image(file: UploadFile = File(...)):
 
     return response
 
-@app.post("/classify-image/")
-async def classify_image(file: UploadFile = File(...)):
-    image_bytes = await file.read()
-    client = get_client()
-    try:
-        result = get_response(image_bytes, client)
-        return JSONResponse(content=result)
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
+# @app.post("/classify-image/")
+# async def classify_image(file: UploadFile = File(...)):
+#     image_bytes = await file.read()
+#     client = get_client()
+#     try:
+#         result = get_response(image_bytes, client)
+#         return JSONResponse(content=result)
+#     except Exception as e:
+#         return JSONResponse(status_code=500, content={"error": str(e)})
     
 if __name__ == "__main__":
     uvicorn.run(
