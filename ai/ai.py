@@ -89,6 +89,6 @@ if __name__ == "__main__":
         "ai:app",  
         host="0.0.0.0",
         port=8000,
-        reload=True  # optional, for development (auto-reload on code change)
+        reload=True 
     )
     
