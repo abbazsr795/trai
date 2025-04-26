@@ -7,7 +7,8 @@ import uvicorn
 import json
 import google.genai as genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
-from fastapi.responses import JSONResponse
+from PIL import Image
+from io import BytesIO
 
 # Load environment variables
 load_dotenv()
@@ -27,7 +28,7 @@ def get_client() -> genai.Client:
 
 # Function to get the Gemini response
 def get_response(image_data: bytes, client: genai.Client) -> Dict[str, str]:
-    uploaded_image = genai.upload_file(image_data, mime_type="image/png")
+    uploaded_image = Image.open(BytesIO(image_data))
     # we use PIL to open image
     response: GenerateContentResponse = client.models.generate_content(
         model='gemini-1.5-flash',
