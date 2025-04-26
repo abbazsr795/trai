@@ -1,42 +1,61 @@
-import os
-from dotenv import load_dotenv
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
-import google.genai as genai
-import json
+from dotenv import load_dotenv
 from typing import Dict
-from google.genai.types import GenerateContentConfig,GenerateContentResponse
+import os
+import json
+import google.genai as genai
+from google.genai.types import GenerateContentConfig, GenerateContentResponse
+
+# Load environment variables
 load_dotenv()
 
+# Initialize FastAPI app
+app = FastAPI()
+
+# Define output model
 class ImageInfo(BaseModel):
     object_type: str
     object_condition: str
 
-
+# Initialize Gemini Client
 def get_client() -> genai.Client:
-    client : genai.Client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client: genai.Client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
     return client
 
-def get_response(image,client: genai.Client) -> Dict[str,str]:
-    response : GenerateContentResponse = client.models.generate_content(
+# Function to get the Gemini response
+def get_response(image_data: bytes, client: genai.Client) -> Dict[str, str]:
+    response: GenerateContentResponse = client.models.generate_content(
         model='gemini-1.5-flash',
-        contents = [
-            image,
-            "Classify the object" + 
-            "Classify the object in this image into one of the following categories: " +
-            "'perfectly reusable', 'reusable with some level of tinkering', or 'can't be used anymore'."
-            + "only give the name of the class and not any text"
+        contents=[
+            {"mime_type": "image/png", "data": image_data},
+            "Classify the object. Classify the object in this image into one of the following categories: " +
+            "'perfectly reusable', 'reusable with some level of tinkering', or 'can't be used anymore'." +
+            " Only give the name of the class and not any text."
         ],
         config=GenerateContentConfig(
-            system_instruction='you are a object classifier as well as a object condition classifier',
-            response_mime_type= 'application/json',
+            system_instruction='You are an object classifier as well as an object condition classifier',
+            response_mime_type='application/json',
             response_schema=ImageInfo,
             seed=42,
         ),
     )
-    dictionary : Dict[str,str] = json.loads(response.text)
+    dictionary: Dict[str, str] = json.loads(response.text)
     return dictionary
 
-def main(image) -> Dict[str,str]:
-    client : genai.Client = get_client()
-    response : Dict[str,str] = get_response(image,client)
+# FastAPI endpoint
+@app.post("/classify-image", response_model=ImageInfo)
+async def classify_image(file: UploadFile = File(...)):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image.")
+
+    image_data = await file.read()
+
+    client: genai.Client = get_client()
+    
+    try:
+        response: Dict[str, str] = get_response(image_data, client)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error from Gemini API: {str(e)}")
+
     return response
