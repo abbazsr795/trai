@@ -8,7 +8,7 @@ import json
 import google.genai as genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
 from fastapi.middleware.cors import CORSMiddleware
-from PIL import Image
+from PIL import Image,ImageFile
 from io import BytesIO
 
 # Load environment variables
@@ -37,7 +37,7 @@ def get_client() -> genai.Client:
 
 # Function to get the Gemini response
 def get_response(image_data: bytes, client: genai.Client) -> Dict[str, str]:
-    uploaded_image = Image.open(BytesIO(image_data))
+    uploaded_image : ImageFile = Image.open(BytesIO(image_data))
     # we use PIL to open image
     response: GenerateContentResponse = client.models.generate_content(
         model='gemini-1.5-flash',
@@ -63,7 +63,7 @@ async def classify_image(file: UploadFile = File(...)):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image.")
 
-    image_data = await file.read()
+    image_data : bytes = await file.read()
 
     client: genai.Client = get_client()
     
