@@ -6,7 +6,6 @@ import { setEmail, setPassword, setToken, clearEmail, clearPassword, clearToken 
 import supabase from "../(supabase)/config";
 
 export default function SignIn() {
-
     const email = useSelector((state: RootState) => state.credentials.email);
     const password = useSelector((state: RootState) => state.credentials.password);
     const token = useSelector((state: RootState) => state.credentials.token);
