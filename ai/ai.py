@@ -7,6 +7,7 @@ import uvicorn
 import json
 import google.genai as genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
+from fastapi.responses import JSONResponse
 
 # Load environment variables
 load_dotenv()
@@ -68,3 +69,13 @@ if __name__ == "__main__":
         port=8000,
         reload=True  # optional, for development (auto-reload on code change)
     )
+    
+@app.post("/classify-image/")
+async def classify_image(file: UploadFile = File(...)):
+    image_bytes = await file.read()
+    client = get_client()
+    try:
+        result = get_response(image_bytes, client)
+        return JSONResponse(content=result)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
