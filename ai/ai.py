@@ -7,6 +7,7 @@ import uvicorn
 import json
 import google.genai as genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from io import BytesIO
 
@@ -15,6 +16,14 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or specify your frontend domain like ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Define output model
 class ImageInfo(BaseModel):
